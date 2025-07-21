@@ -8,7 +8,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Zoom from '@mui/material/Zoom';
 import { useState, useEffect } from 'react';
 
-const MenuBar = () => {
+function MenuBar() {
   const { editor } = useCurrentEditor();
 
   if (!editor) {
@@ -160,5 +160,5 @@ const MenuBar = () => {
       </Tooltip>
     </div>
   );
-};
+}
 export default MenuBar;

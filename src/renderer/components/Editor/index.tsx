@@ -59,7 +59,7 @@ export default function Editor() {
   const [poemHistory, setPoemHistory] = useState<ChangeObj[]>(restoreHistory);
   const onUpdate = ({ editor }: { editor: EditorType }) => {
     const newHtml = editor.getHTML();
-    const pos = editor.state.selection.$anchor.pos;
+    const { pos } = editor.state.selection.$anchor;
     if (htmlString === newHtml) {
       return;
     }

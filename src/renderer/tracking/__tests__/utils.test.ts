@@ -1,4 +1,10 @@
-import { compareStrings, step, reconstruct, reconstructHTML, ChangeObj } from '../utils';
+import {
+  compareStrings,
+  step,
+  reconstruct,
+  reconstructHTML,
+  ChangeObj,
+} from '../utils';
 
 describe('Change Tracking Algorithm', () => {
   describe('compareStrings', () => {
@@ -108,7 +114,11 @@ describe('Change Tracking Algorithm', () => {
     });
 
     it('should handle HTML tag insertion', () => {
-      const result = compareStrings('<p>hello</p>', '<p><strong>hello</strong></p>', 17);
+      const result = compareStrings(
+        '<p>hello</p>',
+        '<p><strong>hello</strong></p>',
+        17,
+      );
       expect(result.inserted).toBe('<strong>hello</strong>');
       expect(result.front).toBe(3);
       expect(result.end).toBe(4);
@@ -131,7 +141,7 @@ describe('Change Tracking Algorithm', () => {
         front: 0,
         end: 0,
         t: new Date(),
-        pos: 1
+        pos: 1,
       };
       const result = step('hello', change);
       expect(result).toBe('Xhello');
@@ -143,7 +153,7 @@ describe('Change Tracking Algorithm', () => {
         front: 5,
         end: 0,
         t: new Date(),
-        pos: 6
+        pos: 6,
       };
       const result = step('hello', change);
       expect(result).toBe('helloX');
@@ -155,7 +165,7 @@ describe('Change Tracking Algorithm', () => {
         front: 2,
         end: 3,
         t: new Date(),
-        pos: 3
+        pos: 3,
       };
       const result = step('hello', change);
       expect(result).toBe('heXllo');
@@ -167,7 +177,7 @@ describe('Change Tracking Algorithm', () => {
         front: 1,
         end: 3,
         t: new Date(),
-        pos: 1
+        pos: 1,
       };
       const result = step('hello', change);
       expect(result).toBe('hlo');
@@ -179,7 +189,7 @@ describe('Change Tracking Algorithm', () => {
         front: 1,
         end: 3,
         t: new Date(),
-        pos: 2
+        pos: 2,
       };
       const result = step('hello', change);
       expect(result).toBe('hilo');
@@ -190,10 +200,10 @@ describe('Change Tracking Algorithm', () => {
     it('should maintain integrity: compareStrings → step → original result', () => {
       const original = 'hello world';
       const modified = 'hello beautiful world';
-      
+
       const change = compareStrings(original, modified, 15);
       const reconstructed = step(original, change);
-      
+
       expect(reconstructed).toBe(modified);
     });
 
@@ -210,7 +220,7 @@ describe('Change Tracking Algorithm', () => {
         'Hello wo',
         'Hello wor',
         'Hello worl',
-        'Hello world'
+        'Hello world',
       ];
 
       const changes: ChangeObj[] = [];
@@ -234,12 +244,14 @@ describe('Change Tracking Algorithm', () => {
         'The quick brown fox jumps over the lazy dog',
         'The quick brown fox leaps over the lazy dog', // replace "jumps" with "leaps"
         'The quick fox leaps over the lazy dog', // delete "brown"
-        'The quick fox leaps over the sleepy dog' // replace "lazy" with "sleepy"
+        'The quick fox leaps over the sleepy dog', // replace "lazy" with "sleepy"
       ];
 
       const changes: ChangeObj[] = [];
       for (let i = 1; i < sequence.length; i++) {
-        changes.push(compareStrings(sequence[i - 1], sequence[i], sequence[i].length));
+        changes.push(
+          compareStrings(sequence[i - 1], sequence[i], sequence[i].length),
+        );
       }
 
       // Test reconstruction at each point
@@ -257,14 +269,16 @@ describe('Change Tracking Algorithm', () => {
     });
 
     it('should reconstruct single change', () => {
-      const changes: ChangeObj[] = [{
-        inserted: 'Hello',
-        front: 0,
-        end: 0,
-        t: new Date(),
-        pos: 5
-      }];
-      
+      const changes: ChangeObj[] = [
+        {
+          inserted: 'Hello',
+          front: 0,
+          end: 0,
+          t: new Date(),
+          pos: 5,
+        },
+      ];
+
       const result = reconstruct('', changes, 0);
       expect(result).toBe('Hello');
     });
@@ -275,7 +289,7 @@ describe('Change Tracking Algorithm', () => {
         { inserted: 'e', front: 1, end: 0, t: new Date(), pos: 2 },
         { inserted: 'l', front: 2, end: 0, t: new Date(), pos: 3 },
         { inserted: 'l', front: 3, end: 0, t: new Date(), pos: 4 },
-        { inserted: 'o', front: 4, end: 0, t: new Date(), pos: 5 }
+        { inserted: 'o', front: 4, end: 0, t: new Date(), pos: 5 },
       ];
 
       expect(reconstruct('', changes, 0)).toBe('H');
@@ -295,7 +309,7 @@ describe('Change Tracking Algorithm', () => {
     it('should reconstruct HTML content', () => {
       const changes: ChangeObj[] = [
         { inserted: '<p>Hello</p>', front: 0, end: 0, t: new Date(), pos: 11 },
-        { inserted: '<p>World</p>', front: 11, end: 0, t: new Date(), pos: 22 }
+        { inserted: '<p>World</p>', front: 11, end: 0, t: new Date(), pos: 22 },
       ];
 
       const result = reconstructHTML('', changes, 1);
@@ -306,8 +320,8 @@ describe('Change Tracking Algorithm', () => {
   describe('Edge cases and boundary conditions', () => {
     it('should handle very long strings', () => {
       const longString = 'a'.repeat(10000);
-      const modifiedString = 'a'.repeat(5000) + 'X' + 'a'.repeat(5000);
-      
+      const modifiedString = `${'a'.repeat(5000)}X${'a'.repeat(5000)}`;
+
       const change = compareStrings(longString, modifiedString, 5001);
       expect(change.inserted).toBe('X');
       expect(change.front).toBe(5000);
@@ -331,7 +345,7 @@ describe('Change Tracking Algorithm', () => {
     it('should handle complex HTML structures', () => {
       const original = '<p>Hello</p>';
       const modified = '<p><strong>Hello</strong> <em>world</em></p>';
-      
+
       const change = compareStrings(original, modified, modified.length);
       const reconstructed = step(original, change);
       expect(reconstructed).toBe(modified);

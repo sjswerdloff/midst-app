@@ -3,10 +3,10 @@ import { BrowserWindow } from 'electron';
 import path from 'path';
 import { ChangeObj } from 'renderer/tracking/utils';
 import { URL } from 'url';
-import store from './store';
 import { generateJSON, generateHTML } from '@tiptap/html';
 import StarterKit from '@tiptap/starter-kit';
 import { JSONContent } from '@tiptap/core';
+import store from './store';
 
 const extensions = [
   StarterKit.configure({

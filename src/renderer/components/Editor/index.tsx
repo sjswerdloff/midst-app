@@ -38,7 +38,7 @@ export default function Editor() {
 
   const restoreSpellcheckSetting = window.electron.store.get('spellcheck');
   const [spellcheckOn, setSpellcheckOn] = useState<boolean>(
-    restoreSpellcheckSetting === 'true'
+    restoreSpellcheckSetting === 'true',
   );
   const heightClass = window.electron.versions.isMac
     ? 'editor-height-tall'
@@ -92,7 +92,7 @@ export default function Editor() {
         setHtmlString(strPoem);
         setPoemHistory(strHistory);
         window.location.reload();
-      }
+      },
     );
 
     const removeToggleSpellcheck = window.electron.ipcRenderer.on(
@@ -101,7 +101,7 @@ export default function Editor() {
         setSpellcheckOn(!spellcheckOn);
         window.electron.store.set('spellcheck', (!spellcheckOn).toString());
         window.location.reload();
-      }
+      },
     );
     return () => {
       removeOpen();
@@ -115,7 +115,7 @@ export default function Editor() {
       () => {
         saveFileAndUpdateStore();
         navigate('/replay');
-      }
+      },
     );
     return () => {
       removeToggleEdit();
@@ -134,7 +134,7 @@ export default function Editor() {
   const [sizeClass, _setSizeClass] = useState<number>(
     [0, 1, 2, 3, 4].includes(restoreSizeClassSetting)
       ? restoreSizeClassSetting
-      : 2
+      : 2,
   );
 
   return (

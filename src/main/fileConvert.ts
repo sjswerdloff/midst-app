@@ -80,7 +80,7 @@ fs.writeFile(
   JSON.stringify(newFrames),
   () => {
     console.log('success');
-  }
+  },
 );
 // const paddedNewFrames = [{ content: '', timestamp: new Date() }, ...newFrames];
 

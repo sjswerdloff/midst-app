@@ -18,7 +18,7 @@ export const step = (initial: string, change: ChangeObj) => {
 export const compareStrings = (
   str: string,
   next: string,
-  pos: number
+  pos: number,
 ): ChangeObj => {
   let inserted = '';
   let front = 0;
@@ -47,7 +47,7 @@ export const compareStrings = (
 export const reconstruct = (
   initial: string,
   changes: ChangeObj[],
-  index: number
+  index: number,
 ) => {
   if (changes) {
     return changes
@@ -60,7 +60,7 @@ export const reconstruct = (
 export const reconstructArray = (
   initial: string,
   changes: ChangeObj[],
-  index: number
+  index: number,
 ) => {
   if (!changes.length) return [];
   const reconstructed = reconstruct(initial, changes, index);
@@ -78,7 +78,7 @@ export const reconstructArray = (
 export const reconstructHTML = (
   initial: string,
   changes: ChangeObj[],
-  index: number
+  index: number,
 ) => {
   if (!changes.length) return '';
   const reconstructed = reconstruct(initial, changes, index);

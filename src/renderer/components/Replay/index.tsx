@@ -39,7 +39,7 @@ export default function Replay() {
     : [];
   const [history, setHistory] = useState<ChangeObj[]>(restoreHistory);
   const [maxStep, setMaxStep] = useState(
-    history.length ? history.length - 1 : 0
+    history.length ? history.length - 1 : 0,
   );
   const playPauseButton = useRef<HTMLButtonElement | null>(null);
 
@@ -141,21 +141,21 @@ export default function Replay() {
         if (!strHistory.length) {
           navigate('/');
         }
-      }
+      },
     );
 
     const removeToggleEdit = window.electron.ipcRenderer.on(
       'toggle-edit-mode',
       () => {
         navigate('/');
-      }
+      },
     );
 
     const removeFontSize = window.electron.ipcRenderer.on(
       'set-font-size',
       (newSize) => {
         setSizeClass(Number(newSize));
-      }
+      },
     );
 
     return () => {
@@ -183,13 +183,13 @@ export default function Replay() {
     };
   }, []);
   const restoreSizeClassSetting = Number(
-    window.electron.store.get('font-size')
+    window.electron.store.get('font-size'),
   );
 
   const [sizeClass, setSizeClass] = useState<number>(
     [0, 1, 2, 3, 4].includes(restoreSizeClassSetting)
       ? restoreSizeClassSetting
-      : 2
+      : 2,
   );
   const decreaseSize = () => {
     if (sizeClass <= 0) {

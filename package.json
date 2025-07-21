@@ -23,9 +23,15 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": ["prettier --write"],
-    "src/**/*.{json,css,scss,md}": ["prettier --write"],
-    ".erb/scripts/*.{js,ts}": ["prettier --write"]
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "src/**/*.{json,css,scss,md}": [
+      "prettier --write"
+    ],
+    ".erb/scripts/*.{js,ts}": [
+      "prettier --write"
+    ]
   },
   "browserslist": [],
   "prettier": {
@@ -72,8 +78,12 @@
       "test-files"
     ],
     "transform": {
-      "\\.(ts|tsx|js|jsx)$": "ts-jest"
-    }
+      "\\.(ts|tsx)$": "ts-jest",
+      "\\.(js|jsx)$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@tiptap|zeed-dom)/)"
+    ]
   },
   "dependencies": {
     "@emotion/react": "^11.13.0",
@@ -97,6 +107,8 @@
     "react-router-dom": "^6.25.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
     "@electron/notarize": "^2.5.0",
     "@electron/rebuild": "^3.3.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
@@ -114,6 +126,7 @@
     "@types/webpack-bundle-analyzer": "^4.6.0",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
+    "babel-jest": "^30.0.4",
     "browserslist-config-erb": "^0.0.3",
     "chalk": "^4.1.2",
     "concurrently": "^8.1.0",

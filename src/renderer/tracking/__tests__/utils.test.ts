@@ -352,3 +352,199 @@ describe('Change Tracking Algorithm', () => {
     });
   });
 });
+
+describe('Unicode and Persian Poetry Support', () => {
+  describe('Persian Character Handling', () => {
+    it('should handle Persian characters correctly', () => {
+      const original = 'سلام'; // "Hello" in Persian
+      const modified = 'سلام دنیا'; // "Hello World" in Persian
+
+      const result = compareStrings(original, modified, 5);
+
+      expect(result.inserted).toBe(' دنیا');
+      expect(result.front).toBe(4); // After "سلام" (4 bytes in UTF-8)
+      expect(result.end).toBe(0);
+    });
+
+    it('should preserve Persian characters during reconstruction', () => {
+      const original = '';
+      const persian_text = 'شعر فارسی زیبا است'; // "Persian poetry is beautiful"
+
+      const change = compareStrings(
+        original,
+        persian_text,
+        persian_text.length,
+      );
+      const reconstructed = step(original, change);
+
+      expect(reconstructed).toBe(persian_text);
+      expect(reconstructed).toContain('شعر');
+      expect(reconstructed).toContain('فارسی');
+    });
+
+    it('should handle character insertions mid-Persian-word', () => {
+      const original = 'شعر'; // "poetry"
+      const modified = 'شعری'; // "poetry" with possession marker
+
+      const result = compareStrings(original, modified, 4);
+
+      expect(result.inserted).toBe('ی');
+      expect(result.front).toBe(3); // After ش-ع-ر
+      expect(result.end).toBe(0);
+
+      // Verify reconstruction
+      const reconstructed = step(original, result);
+      expect(reconstructed).toBe(modified);
+    });
+  });
+
+  describe('Diacritical Marks (Harakat)', () => {
+    it('should preserve diacritical marks during changes', () => {
+      const original = 'شِعر'; // "poetry" with kasra (ِ) mark
+      const modified = 'شِعرِ'; // with additional kasra
+
+      const result = compareStrings(original, modified, 5);
+
+      expect(result.inserted).toBe('ِ');
+      expect(result.front).toBe(4);
+
+      // Verify diacritical marks are preserved
+      const reconstructed = step(original, result);
+      expect(reconstructed).toBe(modified);
+      expect(reconstructed).toContain('ِ'); // Contains kasra
+    });
+
+    it('should handle adding diacritics to existing text', () => {
+      const original = 'شعر'; // Without diacritics
+      const modified = 'شَعْر'; // With fatha (َ) and sukun (ْ)
+
+      const result = compareStrings(original, modified, 5);
+
+      const reconstructed = step(original, result);
+      expect(reconstructed).toBe(modified);
+      expect(reconstructed).toContain('َ'); // Contains fatha
+      expect(reconstructed).toContain('ْ'); // Contains sukun
+    });
+  });
+
+  describe('Mixed Script Content', () => {
+    it('should handle Persian-English mixed content', () => {
+      const original = 'شعر English';
+      const modified = 'شعر فارسی English poetry';
+
+      const result = compareStrings(original, modified, 10);
+
+      const reconstructed = step(original, result);
+      expect(reconstructed).toBe(modified);
+      expect(reconstructed).toContain('شعر');
+      expect(reconstructed).toContain('English');
+      expect(reconstructed).toContain('فارسی');
+    });
+
+    it('should handle numbers within Persian text', () => {
+      const original = 'صفحه'; // "page"
+      const modified = 'صفحه ۱۲۳'; // "page 123" with Persian numerals
+
+      const result = compareStrings(original, modified, 8);
+
+      expect(result.inserted).toBe(' ۱۲۳');
+
+      const reconstructed = step(original, result);
+      expect(reconstructed).toBe(modified);
+      expect(reconstructed).toContain('۱۲۳'); // Persian numerals
+    });
+
+    it('should handle Arabic text within Persian content', () => {
+      const original = 'شعر فارسی';
+      const modified = 'شعر فارسی و عربی'; // Adding Arabic text
+
+      const result = compareStrings(original, modified, 12);
+
+      const reconstructed = step(original, result);
+      expect(reconstructed).toBe(modified);
+      expect(reconstructed).toContain('عربی'); // Arabic word
+    });
+  });
+
+  describe('Complex Poetry Structures', () => {
+    it('should handle traditional Persian poetry format', () => {
+      const original = '';
+      const ghazal_line = 'دل می‌خواهد که با تو سخن گویم'; // Traditional ghazal line
+
+      const change = compareStrings(original, ghazal_line, ghazal_line.length);
+      const reconstructed = step(original, change);
+
+      expect(reconstructed).toBe(ghazal_line);
+      expect(reconstructed).toContain('می‌خواهد'); // Contains word with ZWNJ
+    });
+
+    it('should preserve Persian punctuation marks', () => {
+      const original = 'شعر';
+      const modified = 'شعر؟ شعر!'; // Persian question and exclamation
+
+      const result = compareStrings(original, modified, 9);
+
+      const reconstructed = step(original, result);
+      expect(reconstructed).toBe(modified);
+      expect(reconstructed).toContain('؟'); // Persian question mark
+      expect(reconstructed).toContain('!'); // Exclamation
+    });
+
+    it('should handle Persian poetry line breaks', () => {
+      const original = 'بیت اول';
+      const modified = 'بیت اول\nبیت دوم'; // Two verses
+
+      const result = compareStrings(original, modified, 10);
+
+      expect(result.inserted).toBe('\nبیت دوم');
+
+      const reconstructed = step(original, result);
+      expect(reconstructed).toBe(modified);
+      expect(reconstructed.split('\n')).toHaveLength(2);
+    });
+  });
+
+  describe('Edge Cases and Performance', () => {
+    it('should handle empty Persian strings', () => {
+      const original = '';
+      const modified = '';
+
+      const result = compareStrings(original, modified, 0);
+
+      expect(result.inserted).toBe('');
+      expect(result.front).toBe(0);
+      expect(result.end).toBe(0);
+    });
+
+    it('should handle long Persian text efficiently', () => {
+      const persian_paragraph =
+        'در این دشت بی‌انتها که زمین و آسمان در هم آمیخته‌اند، شاعری نشسته و به ستارگان نگاه می‌کند. او در جستجوی الهامی است که قلبش را به لرزه درآورد و کلماتی بیافریند که جاودانه باشند. شعر، زبان روح است و شاعر، ترجمان احساساتی که در اعماق وجود انسان نهفته‌اند.';
+
+      const original = persian_paragraph.slice(0, 50);
+      const modified = persian_paragraph;
+
+      const start = Date.now();
+      const result = compareStrings(original, modified, modified.length);
+      const duration = Date.now() - start;
+
+      // Should complete quickly even with long Persian text
+      expect(duration).toBeLessThan(100); // Less than 100ms
+
+      const reconstructed = step(original, result);
+      expect(reconstructed).toBe(modified);
+    });
+
+    it('should handle Unicode normalization consistently', () => {
+      // Same text in different Unicode normalizations
+      const nfc = 'شِعر'; // NFC normalization
+      const nfd = 'شِعر'; // NFD normalization (if different)
+
+      const result1 = compareStrings('', nfc, nfc.length);
+      const result2 = compareStrings('', nfd, nfd.length);
+
+      // Should handle both forms correctly
+      expect(step('', result1)).toBeTruthy();
+      expect(step('', result2)).toBeTruthy();
+    });
+  });
+});

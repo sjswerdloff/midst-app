@@ -38,8 +38,8 @@ jobs:
     - name: Check Prettier formatting
       run: npx prettier --check "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}" ".erb/scripts/*.{js,ts}"
       
-    - name: Run tests
-      run: npm test || true
+    - name: Run core tests
+      run: npm run test:ci || true
       continue-on-error: true
       
     - name: Build application

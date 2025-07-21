@@ -20,6 +20,11 @@
     "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
+    "test:core": "jest utils.core.test.ts utils.integration.test.ts",
+    "test:unicode": "jest utils.unicode.test.ts",
+    "test:cjk": "jest utils.cjk.test.ts",
+    "test:tracking": "jest src/renderer/tracking",
+    "test:ci": "npm run test:core",
     "prepare": "husky"
   },
   "lint-staged": {

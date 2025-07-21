@@ -38,7 +38,7 @@ const compareStrings = (
   str: string,
   next: string,
   t: Date,
-  pos?: number
+  pos?: number,
 ): ChangeObj => {
   // fix to use position
   let inserted = '';
@@ -160,7 +160,7 @@ export const loadDataIntoWorkspace = (
   filename: string,
   data: string,
   mainWindow: BrowserWindow,
-  darwin: boolean
+  darwin: boolean,
 ) => {
   const { text, history } = JSON.parse(stripVersionInfo(data));
   store.set('poem', text);
@@ -171,7 +171,7 @@ export const loadDataIntoWorkspace = (
     'open-file',
     text,
     history,
-    path.basename(filename)
+    path.basename(filename),
   );
   if (darwin) {
     mainWindow.setDocumentEdited(false);

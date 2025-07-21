@@ -21,7 +21,7 @@ const MenuBar = () => {
   const [sizeClass, setSizeClass] = useState<number>(
     [0, 1, 2, 3, 4].includes(restoreSizeClassSetting)
       ? restoreSizeClassSetting
-      : 2
+      : 2,
   );
 
   const decreaseSize = () => {
@@ -34,7 +34,7 @@ const MenuBar = () => {
     const existingClasses = editor.options.editorProps.attributes?.class;
     const existingClassesList = existingClasses.split(' ');
     const newClasses = existingClassesList.filter(
-      (item: string) => !item.includes('size')
+      (item: string) => !item.includes('size'),
     );
     newClasses.push(`size-${sizeClass - 1}`);
     editor.setOptions({
@@ -60,7 +60,7 @@ const MenuBar = () => {
     const existingClassesList = existingClasses.split(' ');
 
     const newClasses = existingClassesList.filter(
-      (item: string) => !item.includes('size')
+      (item: string) => !item.includes('size'),
     );
     newClasses.push(`size-${sizeClass + 1}`);
     editor.setOptions({
@@ -83,7 +83,7 @@ const MenuBar = () => {
         const existingClasses = editor.options.editorProps.attributes?.class;
         const existingClassesList = existingClasses.split(' ');
         const newClasses = existingClassesList.filter(
-          (item: string) => !item.includes('size')
+          (item: string) => !item.includes('size'),
         );
         newClasses.push(`size-${newSize}`);
         editor.setOptions({
@@ -95,7 +95,7 @@ const MenuBar = () => {
             },
           },
         });
-      }
+      },
     );
     return () => {
       removeSetFontSize();

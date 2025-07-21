@@ -159,7 +159,7 @@ const createWindow = async () => {
               newFilename,
               includeVersionInfo(newFileContents),
               mainWindow,
-              darwin
+              darwin,
             );
           }
           earlyPath = '';

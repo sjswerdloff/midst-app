@@ -88,7 +88,7 @@ export const save = async (mainWindow: BrowserWindow, darwin: boolean) => {
       JSON.stringify({
         text,
         history: JSON.parse(history),
-      })
+      }),
     );
     if (darwin) {
       mainWindow.setDocumentEdited(false);
@@ -120,7 +120,7 @@ export const saveAs = async (mainWindow: BrowserWindow, darwin: boolean) => {
       JSON.stringify({
         text,
         history: JSON.parse(history),
-      })
+      }),
     );
     if (darwin) {
       mainWindow.setDocumentEdited(false);
@@ -194,7 +194,7 @@ export const openFile = async (mainWindow: BrowserWindow, darwin: boolean) => {
             newFilename,
             includeVersionInfo(newFileContents),
             mainWindow,
-            darwin
+            darwin,
           );
         }
       }
@@ -519,7 +519,7 @@ export default class MenuBuilder {
                   accelerator: 'F11',
                   click: () => {
                     this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
+                      !this.mainWindow.isFullScreen(),
                     );
                   },
                 },
@@ -547,7 +547,7 @@ export default class MenuBuilder {
                   accelerator: 'F11',
                   click: () => {
                     this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
+                      !this.mainWindow.isFullScreen(),
                     );
                   },
                 },
